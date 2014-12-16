@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os import path
 from  resources.lib.common import addon
 from resources.lib.config import cConfig
@@ -215,10 +216,16 @@ class cGuiElement:
             logger.info('Could not get MetaInformations for %s, mediaType not defined' % self.getTitle())
             return False
         oMetaget = metahandlers.MetaData()
-        if self._mediaType == 'movie' or self._mediaType == 'tvshow':
+        if self._mediaType == 'tvshow':
             meta = oMetaget.get_meta(self._mediaType, self.__sTitle)
-            #if self._mediaType == 'tvshow' and not self.__aItemValues['TVShowTitle']:
-            #    self.setTVShowTitle(self.__sTitle)
+        if self._mediaType == 'movie':
+            sSearch = self.__sTitle.lower()
+            sSearch = sSearch.replace("ä", "ae")
+            sSearch = sSearch.replace("ö", "oe")
+            sSearch = sSearch.replace("ü", "ue")
+            sSearch = sSearch.replace("ß", "ss")
+            sSearch = sSearch.replace("é", "e")
+            meta = oMetaget.get_meta(self._mediaType, sSearch)
         elif self._mediaType == 'season':
             meta = oMetaget.get_seasons(TVShowTitle, imdbID, str(season))
         elif self._mediaType == 'episode':
